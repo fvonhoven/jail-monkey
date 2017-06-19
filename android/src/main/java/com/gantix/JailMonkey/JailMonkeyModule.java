@@ -102,17 +102,17 @@ public class JailMonkeyModule extends ReactContextBaseJavaModule {
   }
 
   //returns true if mock location enabled, false if not enabled.
-  private boolean isMockLocationOn(Context context, Location location) {
+  public static boolean isLocationFromMockProvider(Context context, Location location) {
     boolean isMock = false;
     if (android.os.Build.VERSION.SDK_INT >= 23) {
         isMock = location.isFromMockProvider();
         return isMock;
     } else {
-      if (Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ALLOW_MOCK_LOCATION).equals("0")) {
-        return false;
-      } else {
-        return true;
-      }
+        if (Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ALLOW_MOCK_LOCATION).equals("0"))
+            return false;
+        else {
+            return true;
+        }
     }
   }
 
