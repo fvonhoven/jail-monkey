@@ -46,20 +46,20 @@ public class JailMonkeyModule extends ReactContextBaseJavaModule {
 
   private boolean isSuperuserPresent() {
     // Check if /system/app/Superuser.apk is present
-    String[] paths = { 
-      "/system/app/Superuser.apk", 
-      "/sbin/su", 
-      "/system/bin/su", 
-      "/system/xbin/su", 
-      "/data/local/xbin/su", 
-      "/data/local/bin/su", 
-      "/system/sd/xbin/su", 
-      "/system/bin/failsafe/su", 
-      "/data/local/su" 
+    String[] paths = {
+      "/system/app/Superuser.apk",
+      "/sbin/su",
+      "/system/bin/su",
+      "/system/xbin/su",
+      "/data/local/xbin/su",
+      "/data/local/bin/su",
+      "/system/sd/xbin/su",
+      "/system/bin/failsafe/su",
+      "/data/local/su"
     };
 
     for (String path : paths) {
-        if (new File(path).exists()) { 
+        if (new File(path).exists()) {
           return true;
         }
     }
@@ -96,22 +96,28 @@ public class JailMonkeyModule extends ReactContextBaseJavaModule {
     } catch (Exception e) {
       executeResult = false;
     }
- 
+
     return executeResult;
   }
 
   //returns true if mock location enabled, false if not enabled.
-  private boolean isMockLocationOn(Context context) {
-    if (Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ALLOW_MOCK_LOCATION).equals("0")) {
-      return false;
+  private boolean isMockLocationOn(Context context Location location) {
+    boolean isMock = false;
+    if (android.os.Build.VERSION.SDK_INT >= 23) {
+        isMock = location.isFromMockProvider();
+        return isMock;
     } else {
-      return true;
+      if (Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ALLOW_MOCK_LOCATION).equals("0")) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 
   /**
     * Checks if the application is installed on the SD card.
-    * 
+    *
     * @return <code>true</code> if the application is installed on the sd card
     */
  private boolean isOnExternalStorage(Context context) {
